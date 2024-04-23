@@ -1,11 +1,8 @@
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import prisma from "@/lib/prisma";
-import { SquarePen } from "lucide-react";
-import Link from "next/link";
 import { notFound } from "next/navigation";
-import IssueDetails from "./_components/IssueDetails";
+import DeleteIssueButton from "./_components/DeleteIssueButton";
 import EditIssueButton from "./_components/EditIssueButton";
+import IssueDetails from "./_components/IssueDetails";
 
 export default async function IssuePage({
   params: { id },
@@ -25,10 +22,15 @@ export default async function IssuePage({
   }
 
   return (
-    <div className="md:grid md:grid-cols-2 md:gap-6">
-      <IssueDetails issue={issue} />
+    <div className="md:grid md:grid-cols-3 md:gap-6">
+      <div className="col-span-2">
+        <IssueDetails issue={issue} />
+      </div>
 
-      <EditIssueButton issueId={issue.id} />
+      <div className="flex flex-col gap-6 items-start">
+        <EditIssueButton issueId={issue.id} />
+        <DeleteIssueButton issueId={issue.id} />
+      </div>
     </div>
   );
 }

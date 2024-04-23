@@ -37,3 +37,26 @@ export async function PATCH(
     console.error("Error creating issue: ", error);
   }
 }
+
+export async function DELETE(
+  req: NextRequest,
+  { params: { id } }: { params: { id: string } }
+) {
+  try {
+    const issue = await prisma.issue.findUnique({
+      where: { id },
+    });
+
+    if (!issue) {
+      return NextResponse.json({ error: "Invalid issue" }, { status: 404 });
+    }
+
+    await prisma.issue.delete({
+      where: { id },
+    });
+
+    return NextResponse.json({ success: true }, { status: 200 });
+  } catch (error) {
+    console.error("Error deleting issue: ", error);
+  }
+}
