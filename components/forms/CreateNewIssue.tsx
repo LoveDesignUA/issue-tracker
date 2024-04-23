@@ -18,6 +18,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { createNewIssueSchema } from "@/schemas";
 import { useRouter } from "next/navigation";
+import { Textarea } from "@/components/ui/textarea";
+import { revalidatePath } from "next/cache";
 
 export function CreateNewIssue() {
   const router = useRouter();
@@ -85,7 +87,7 @@ export function CreateNewIssue() {
             <FormItem>
               <FormLabel>Description</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Textarea {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
