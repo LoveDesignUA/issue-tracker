@@ -59,6 +59,8 @@ export default function EditIssueForm({ issue }: { issue: Issue }) {
         toast.success("Issue updated successfully");
 
         router.push("/issues");
+      } else if (response.status === 401) {
+        toast.error("Not authenticated");
       } else {
         toast.error("Error updating issue");
       }

@@ -28,6 +28,11 @@ export default function DeleteIssueButton({ issueId }: { issueId: string }) {
           method: "DELETE",
         });
 
+        if (res.status === 401) {
+          toast.error("Not authenticated");
+          return;
+        }
+
         if (!res.ok) {
           throw new Error("Failed to delete issue");
         }

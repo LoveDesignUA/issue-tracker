@@ -1,11 +1,16 @@
+import { auth } from "@/auth";
 import prisma from "@/lib/prisma";
 import { UpdateIssueSchema } from "@/schemas";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function PATCH(
+export const PATCH = auth(async function PATCH(
   req: NextRequest,
   { params: { id } }: { params: { id: string } }
 ) {
+  if (!req.auth) {
+    return NextResponse.json({ message: "Not authenticated" }, { status: 401 });
+  }
+
   const body = await req.json();
 
   const validatedBody = UpdateIssueSchema.safeParse(body);
@@ -36,12 +41,16 @@ export async function PATCH(
   } catch (error) {
     console.error("Error creating issue: ", error);
   }
-}
+});
 
-export async function DELETE(
+export const DELETE = auth(async function DELETE(
   req: NextRequest,
   { params: { id } }: { params: { id: string } }
 ) {
+  if (!req.auth) {
+    return NextResponse.json({ message: "Not authenticated" }, { status: 401 });
+  }
+
   try {
     const issue = await prisma.issue.findUnique({
       where: { id },
@@ -59,4 +68,4 @@ export async function DELETE(
   } catch (error) {
     console.error("Error deleting issue: ", error);
   }
-}
+});

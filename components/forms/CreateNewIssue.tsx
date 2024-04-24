@@ -53,6 +53,8 @@ export function CreateNewIssue() {
         toast.success("Issue created successfully");
 
         router.push("/issues");
+      } else if (response.status === 401) {
+        toast.error("Not authenticated");
       } else {
         toast.error("Error creating issue");
       }

@@ -1,8 +1,13 @@
+import { auth } from "@/auth";
 import prisma from "@/lib/prisma";
 import { createNewIssueSchema } from "@/schemas";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function POST(req: NextRequest) {
+export const POST = auth(async function POST(req: NextRequest) {
+  if (!req.auth) {
+    return NextResponse.json({ message: "Not authenticated" }, { status: 401 });
+  }
+
   const body = await req.json();
 
   const validatedBody = createNewIssueSchema.safeParse(body);
@@ -22,4 +27,4 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     console.error("Error creating issue: ", error);
   }
-}
+});
