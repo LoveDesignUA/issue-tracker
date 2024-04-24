@@ -1,12 +1,11 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { Bug, LogIn, LogOut } from "lucide-react";
+import { Bug } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { signIn, signOut, useSession } from "next-auth/react";
-import PulseLoader from "react-spinners/PulseLoader";
+
+import UserButton from "./UserButton";
 
 const links = [
   { href: "/dashboard", label: "Dashboard" },
@@ -15,10 +14,10 @@ const links = [
 
 export default function Header() {
   const pathname = usePathname();
-  const { data, status } = useSession();
 
   return (
     <nav className="container py-4 flex items-center justify-between gap-6 border-b">
+      {/* Nav links */}
       <div className="flex irems-center gap-6">
         <Link href="/">
           <Bug />
@@ -40,27 +39,8 @@ export default function Header() {
         </ul>
       </div>
 
-      <div>
-        {status === "authenticated" ? (
-          <Button className="w-[112px]" variant="outline" asChild>
-            <Link href="/api/auth/signout" onClick={() => signOut()}>
-              <LogIn className="size-3.5 mr-2" />
-              Sign out
-            </Link>
-          </Button>
-        ) : status === "loading" ? (
-          <Button className="w-[112px]" variant="outline">
-            <PulseLoader size={8} />
-          </Button>
-        ) : (
-          <Button className="w-[112px]" variant="outline" asChild>
-            <Link href="/api/auth/signin" onClick={() => signIn()}>
-              <LogOut className="size-3.5 mr-2" />
-              Sign in
-            </Link>
-          </Button>
-        )}
-      </div>
+      {/* Dropdown menu */}
+      <UserButton />
     </nav>
   );
 }
