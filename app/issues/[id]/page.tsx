@@ -17,6 +17,9 @@ export default async function IssuePage({
     where: {
       id: id,
     },
+    include: {
+      assignedToUser: true,
+    },
   });
 
   // await delay(3000);
@@ -33,7 +36,7 @@ export default async function IssuePage({
 
       {session?.user && (
         <div className="flex flex-col gap-6 items-start">
-          <AssigneeSelect />
+          {/* <AssigneeSelect /> */}
           <EditIssueButton issueId={issue.id} />
           <DeleteIssueButton issueId={issue.id} />
         </div>

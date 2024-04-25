@@ -17,40 +17,39 @@ import Link from "next/link";
 export default function UserButton() {
   const { data, status } = useSession();
 
+  if (status === "authenticated")
+    return (
+      <DropdownMenu>
+        <DropdownMenuTrigger>
+          <Avatar>
+            <AvatarImage src={data.user!.image!} />
+            <AvatarFallback>
+              <User />
+            </AvatarFallback>
+          </Avatar>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuLabel>My Account</DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem>{data.user!.email}</DropdownMenuItem>
+          <DropdownMenuItem>
+            <Button className="cursor-pointer" variant="default" asChild>
+              <Link href="/api/auth/signout" onClick={() => signOut()}>
+                <LogIn className="size-3.5 mr-2" />
+                Sign out
+              </Link>
+            </Button>
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    );
+
   return (
-    <div>
-      {status === "authenticated" ? (
-        <DropdownMenu>
-          <DropdownMenuTrigger>
-            <Avatar>
-              <AvatarImage src={data.user!.image!} />
-              <AvatarFallback>
-                <User />
-              </AvatarFallback>
-            </Avatar>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <DropdownMenuLabel>My Account</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>{data.user!.email}</DropdownMenuItem>
-            <DropdownMenuItem>
-              <Button className="cursor-pointer" variant="default" asChild>
-                <Link href="/api/auth/signout" onClick={() => signOut()}>
-                  <LogIn className="size-3.5 mr-2" />
-                  Sign out
-                </Link>
-              </Button>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      ) : (
-        <Button variant="outline" asChild>
-          <Link href="/api/auth/signin" onClick={() => signIn()}>
-            <LogOut className="size-3.5 mr-2" />
-            Sign in
-          </Link>
-        </Button>
-      )}
-    </div>
+    <Button variant="outline" asChild>
+      <Link href="/api/auth/signin" onClick={() => signIn()}>
+        <LogOut className="size-3.5 mr-2" />
+        Sign in
+      </Link>
+    </Button>
   );
 }

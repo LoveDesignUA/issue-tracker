@@ -11,6 +11,9 @@ export default async function EditIssuePage({
     where: {
       id: id,
     },
+    include: {
+      assignedToUser: true,
+    },
   });
 
   if (!issue) {

@@ -24,11 +24,13 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { UpdateIssueSchema, issueStatuses } from "@/schemas";
-import { Issue } from "@prisma/client";
+import { Issue, User } from "@prisma/client";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function EditIssueForm({ issue }: { issue: Issue }) {
   const router = useRouter();
+  const [users, setUsers] = useState<User[]>([]);
 
   const form = useForm<z.infer<typeof UpdateIssueSchema>>({
     resolver: zodResolver(UpdateIssueSchema),
@@ -36,8 +38,22 @@ export default function EditIssueForm({ issue }: { issue: Issue }) {
       title: issue.title,
       description: issue.description,
       status: issue.status,
+      assignedToUserId: issue.assignedToUserId ?? "",
     },
   });
+
+  useEffect(() => {
+    async function fetchUsers() {
+      const response = await fetch("/api/users");
+
+      if (response.ok) {
+        const users = await response.json();
+        setUsers(users);
+      }
+    }
+
+    fetchUsers();
+  }, []);
 
   const {
     formState: { isSubmitting },
@@ -51,7 +67,13 @@ export default function EditIssueForm({ issue }: { issue: Issue }) {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(values),
+        body: JSON.stringify({
+          ...values,
+          assignedToUserId:
+            values.assignedToUserId === "Unassigned"
+              ? null
+              : values.assignedToUserId,
+        }),
       });
 
       if (response.ok) {
@@ -117,6 +139,33 @@ export default function EditIssueForm({ issue }: { issue: Issue }) {
                   {issueStatuses.map((status) => (
                     <SelectItem key={status} value={status}>
                       {status.toLowerCase().replace("_", " ")}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="assignedToUserId"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Assigned to</FormLabel>
+              <Select
+                onValueChange={field.onChange}
+                defaultValue={field.value || ""}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select a user" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Unassigned">Unassigned</SelectItem>
+                  {users.map((user) => (
+                    <SelectItem key={user.id} value={user.id}>
+                      {user.email}
                     </SelectItem>
                   ))}
                 </SelectContent>

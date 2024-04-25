@@ -8,7 +8,11 @@ export const createNewIssueSchema = z.object({
 });
 
 export const UpdateIssueSchema = z.object({
-  title: z.string().min(3, "Title must be at least 3 characters"),
-  description: z.string().min(10, "Description must be at least 10 characters"),
-  status: z.enum(issueStatuses),
+  title: z.string().min(3, "Title must be at least 3 characters").optional(),
+  description: z
+    .string()
+    .min(10, "Description must be at least 10 characters")
+    .optional(),
+  status: z.enum(issueStatuses).optional(),
+  assignedToUserId: z.string().min(10).optional().nullable(),
 });

@@ -13,6 +13,17 @@ export const PATCH = auth(async function PATCH(
 
   const body = await req.json();
 
+  // If user doesn't exist, return 404
+  if (body.assignedToUserId) {
+    const user = await prisma.user.findUnique({
+      where: { id: body.assignedToUserId },
+    });
+
+    if (!user) {
+      return NextResponse.json({ error: "Invalid user" }, { status: 404 });
+    }
+  }
+
   const validatedBody = UpdateIssueSchema.safeParse(body);
 
   if (!validatedBody.success) {

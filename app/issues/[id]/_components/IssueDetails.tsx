@@ -1,12 +1,29 @@
 import { Badge } from "@/components/ui/badge";
-import { Issue } from "@prisma/client";
+import { Issue, Prisma } from "@prisma/client";
 
-export default function IssueDetails({ issue }: { issue: Issue }) {
+// 1: Define a type that includes the relation to `User`
+const issueWithUser = Prisma.validator<Prisma.IssueDefaultArgs>()({
+  include: { assignedToUser: true },
+});
+
+// 2: This type will include a user and all their info
+type IssueWithUser = Prisma.IssueGetPayload<typeof issueWithUser>;
+
+export default function IssueDetails({ issue }: { issue: IssueWithUser }) {
   return (
     <div>
       <h2 className="mb-3">{issue.title}</h2>
 
-      <div className="flex items-center gap-3 mb-6">
+      {issue.assignedToUser ? (
+        <p>
+          Assigned to {issue.assignedToUser.name}&lt;
+          {issue.assignedToUser.email}&gt;
+        </p>
+      ) : (
+        <p>Unassigned</p>
+      )}
+
+      <div className="mt-3 flex items-center gap-3 mb-6">
         <Badge
           variant={
             issue.status === "OPEN"
