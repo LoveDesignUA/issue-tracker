@@ -1,28 +1,21 @@
-import prisma from "@/lib/prisma";
 import Link from "next/link";
 
 import { Badge } from "@/components/ui/badge";
 import {
+  Table,
+  TableBody,
   TableCaption,
+  TableCell,
+  TableHead,
   TableHeader,
   TableRow,
-  TableHead,
-  TableBody,
-  TableCell,
-  Table,
 } from "@/components/ui/table";
 
-const getIssues = async () => {
-  const issues = await prisma.issue.findMany();
+import { Issue } from "@prisma/client";
 
-  return issues;
-};
-
-export default async function IssuesTable() {
-  const issues = await getIssues();
-
+export default function IssuesTable({ issues }: { issues: Issue[] }) {
   return (
-    <Table className="mt-6">
+    <Table className="mt-3">
       <TableCaption>A list of issues</TableCaption>
       <TableHeader>
         <TableRow>
