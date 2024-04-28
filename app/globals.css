@@ -91,6 +91,7 @@
   }
 
   p {
-    @apply first:mt-6 mt-3;
+    /* @apply first:mt-6 mt-3; */
+    @apply my-3;
   }
 }

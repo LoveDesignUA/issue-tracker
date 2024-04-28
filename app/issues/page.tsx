@@ -10,9 +10,11 @@ import { Issue, IssueStatus, Prisma } from "@prisma/client";
 import { redirect } from "next/navigation";
 import { modelFields } from "@/prisma/lib";
 import IssueSorting from "./_components/IssueSorting";
+import ResetButton from "./_components/ResetButton";
+import Pagination from "./_components/Pagination";
 
 export default async function IssuesPage({
-  searchParams,
+  searchParams: { status, sort, order, page },
 }: {
   // searchParams: { [key: string]: string | string[] | undefined };
   // Important
@@ -20,10 +22,11 @@ export default async function IssuesPage({
     status?: IssueStatus;
     sort?: keyof Issue;
     order: "asc" | "desc";
+    page: string;
   };
 }) {
   const validSearchStatus = Object.values(IssueStatus).includes(
-    searchParams.status as IssueStatus
+    status as IssueStatus
   );
 
   // const issueFields = modelFields("Issue");
@@ -31,23 +34,36 @@ export default async function IssuesPage({
     .find((model) => model.name === "Issue")
     ?.fields.map((field) => field.name);
 
-  if (searchParams.status && !validSearchStatus) {
+  if (status && !validSearchStatus) {
     redirect("/issues");
   }
 
+  const currentPage = parseInt(page) || 1;
+  const issuesPerPage = 10;
+  // нужен отдельный запрос для подсчета общего количества записей
+  // по статусу из-за отсутствия skip и take
+  const totalIssues = await prisma.issue.count({
+    where: {
+      status,
+    },
+  });
+
   const issues = await prisma.issue.findMany({
-    ...(searchParams.status &&
+    ...(status &&
       validSearchStatus && {
         where: {
-          status: searchParams.status,
+          status: status,
         },
       }),
-    ...(searchParams.sort &&
-      issueFields?.includes(searchParams.sort) && {
+    ...(sort &&
+      issueFields?.includes(sort) && {
         orderBy: {
-          [searchParams.sort]: searchParams.order ?? "asc",
+          [sort]: order ?? "asc",
         },
       }),
+
+    skip: (currentPage - 1) * issuesPerPage,
+    take: issuesPerPage,
   });
 
   return (
@@ -65,12 +81,20 @@ export default async function IssuesPage({
       </Suspense> */}
 
       <div className="mt-12">
-        <div className="flex justify-between items-center">
+        <div className="flex items-center gap-10">
           <FilterByStatus />
           <IssueSorting issueFields={issueFields ?? []} />
+
+          <ResetButton />
         </div>
 
         <IssuesTable issues={issues} />
+
+        <Pagination
+          totalIssues={totalIssues}
+          issuesPerPage={issuesPerPage}
+          currentPage={currentPage}
+        />
       </div>
     </div>
   );

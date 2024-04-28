@@ -28,21 +28,26 @@ export default function FilterByStatus() {
   };
 
   return (
-    <Select
-      onValueChange={handleStatusFilter}
-      defaultValue={searchParams.get("status") ?? undefined}
-    >
-      <SelectTrigger className="w-[180px]">
-        <SelectValue placeholder="Filter by status..." />
-      </SelectTrigger>
-      <SelectContent>
-        <SelectItem value="ALL">All</SelectItem>
-        {issueStatuses.map((status) => (
-          <SelectItem key={status} value={status}>
-            {status.toLowerCase().replace("_", " ")}
-          </SelectItem>
-        ))}
-      </SelectContent>
-    </Select>
+    <div className="flex items-center gap-2">
+      <span className="text-sm">Status</span>
+
+      <Select
+        onValueChange={handleStatusFilter}
+        // defaultValue={searchParams.get("status") ?? ""}
+        value={searchParams.get("status") ?? ""}
+      >
+        <SelectTrigger className="w-[180px]">
+          <SelectValue placeholder="Select..." />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="ALL">All</SelectItem>
+          {issueStatuses.map((status) => (
+            <SelectItem key={status} value={status}>
+              {status.toLowerCase().replace("_", " ")}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+    </div>
   );
 }
