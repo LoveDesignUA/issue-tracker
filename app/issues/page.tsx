@@ -1,3 +1,5 @@
+// export const dynamic = "force-dynamic";
+
 import { Suspense } from "react";
 import Link from "next/link";
 
@@ -76,10 +78,6 @@ export default async function IssuesPage({
         </Button>
       </div>
 
-      {/* <Suspense fallback={<IssuesTableSkeleton />}>
-        <IssuesTable />
-      </Suspense> */}
-
       <div className="mt-12">
         <div className="flex items-center gap-10">
           <FilterByStatus />
@@ -89,6 +87,9 @@ export default async function IssuesPage({
         </div>
 
         <IssuesTable issues={issues} />
+        {/* <Suspense fallback={<IssuesTableSkeleton />}>
+          <IssuesTable issues={issues} />
+        </Suspense> */}
 
         <Pagination
           totalIssues={totalIssues}

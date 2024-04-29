@@ -1,3 +1,4 @@
+import StatusBadge from "@/components/StatusBadge";
 import { Badge } from "@/components/ui/badge";
 import { Issue, Prisma } from "@prisma/client";
 
@@ -24,17 +25,7 @@ export default function IssueDetails({ issue }: { issue: IssueWithUser }) {
       )}
 
       <div className="mt-3 flex items-center gap-3 mb-6">
-        <Badge
-          variant={
-            issue.status === "OPEN"
-              ? "destructive"
-              : issue.status === "IN_PROGRESS"
-                ? "default"
-                : "outline"
-          }
-        >
-          {issue.status.toLowerCase().replace("_", " ")}
-        </Badge>
+        <StatusBadge status={issue.status} />
 
         <p className="text-sm mt-0">{issue.createdAt.toDateString()}</p>
       </div>

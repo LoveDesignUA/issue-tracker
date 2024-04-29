@@ -41,7 +41,8 @@ export default function IssueSorting({
 
         <Select
           onValueChange={handleIssueSorting}
-          defaultValue={searchParams.get("sort") ?? undefined}
+          // defaultValue={searchParams.get("sort") ?? undefined}
+          value={searchParams.get("sort") ?? ""}
         >
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="Select field..." />

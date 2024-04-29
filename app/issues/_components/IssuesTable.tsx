@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/table";
 
 import { Issue } from "@prisma/client";
+import StatusBadge from "@/components/StatusBadge";
 
 export default function IssuesTable({ issues }: { issues: Issue[] }) {
   return (
@@ -34,17 +35,7 @@ export default function IssuesTable({ issues }: { issues: Issue[] }) {
             </TableCell>
 
             <TableCell>
-              <Badge
-                variant={
-                  status === "OPEN"
-                    ? "destructive"
-                    : status === "IN_PROGRESS"
-                      ? "default"
-                      : "outline"
-                }
-              >
-                {status.toLowerCase().replace("_", " ")}
-              </Badge>
+              <StatusBadge status={status} />
             </TableCell>
             <TableCell>{createdAt.toDateString()}</TableCell>
           </TableRow>

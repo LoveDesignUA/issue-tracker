@@ -8,7 +8,7 @@ import { usePathname } from "next/navigation";
 import UserButton from "./UserButton";
 
 const links = [
-  { href: "/dashboard", label: "Dashboard" },
+  { href: "/", label: "Dashboard" },
   { href: "/issues", label: "Issues" },
 ];
 
