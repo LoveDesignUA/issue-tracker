@@ -15,6 +15,13 @@ import IssueSorting from "./_components/IssueSorting";
 import ResetButton from "./_components/ResetButton";
 import Pagination from "./_components/Pagination";
 
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Issue tracker | Issues",
+  description: "List of all issues in the issue tracker",
+};
+
 export default async function IssuesPage({
   searchParams: { status, sort, order, page },
 }: {

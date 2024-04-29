@@ -3,6 +3,14 @@ import LatestIssues from "@/components/LatestIssues";
 import IssueSummary from "@/components/IssueSummary";
 import IssuesBarChart from "@/components/IssuesBarChart";
 
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Issue tracker | Dashboard",
+  description:
+    "Dashboard of the issue tracker with the latest issues and statistics",
+};
+
 export default async function DashboardPage() {
   const latestIssues = await prisma.issue.findMany({
     take: 5,
